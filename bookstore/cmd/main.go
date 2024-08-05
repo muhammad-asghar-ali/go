@@ -1,12 +1,13 @@
 package main
 
 import (
-	"bookstore/internal/routes"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"bookstore/internal/routes"
 )
 
 func main() {
