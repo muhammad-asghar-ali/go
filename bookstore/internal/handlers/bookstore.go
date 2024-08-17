@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -75,7 +74,7 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
-	update := models.Book{}
+	update := &models.Book{}
 	utils.ParseBody(r, update)
 
 	vars := mux.Vars(r)
@@ -85,14 +84,11 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("parse int err", err.Error())
 	}
 
-	log.Println(update)
 	book, _ := update.GetBookByID(ID)
 	if book != nil {
 		book.Author = update.Author
 		book.Name = update.Name
 		book.Publication = update.Publication
-
-		log.Println(book)
 
 		book.UpdateBook()
 	}
