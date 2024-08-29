@@ -20,13 +20,13 @@ func NewUserHandler(us *models.Svc) *UserHandler {
 }
 
 func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	user := models.User{}
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+	user := &models.User{}
+	if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err := uh.svc.CreateUser(&user); err != nil {
+	if err := uh.svc.CreateUser(user); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
