@@ -3,7 +3,6 @@ package config
 import (
 	"log"
 	"os"
-	"time"
 
 	"gopkg.in/mgo.v2"
 )
@@ -12,7 +11,11 @@ func Connect() (*mgo.Session, *mgo.Database, error) {
 	url := os.Getenv("DB_URL")
 	name := os.Getenv("DB_NAME")
 
-	session, err := mgo.DialWithTimeout(url, 10*time.Second)
+	if url == "" || name == "" {
+		log.Fatal("DB_URL or DB_NAME environment variable is not set")
+	}
+
+	session, err := mgo.Dial(url)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -29,9 +32,13 @@ func Connect() (*mgo.Session, *mgo.Database, error) {
 func GetSession() *mgo.Session {
 	url := os.Getenv("DB_URL")
 
-	session, err := mgo.DialWithTimeout(url, 10*time.Second)
+	if url == "" {
+		log.Fatal("DB_URL environment variable is not set")
+	}
+
+	session, err := mgo.Dial(url)
 	if err != nil {
-		return nil
+		log.Fatal("Failed to connect to MongoDB:", err)
 	}
 
 	session.SetMode(mgo.Monotonic, true)
