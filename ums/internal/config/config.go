@@ -3,17 +3,15 @@ package config
 import (
 	"context"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var (
-	db *mongo.Client
-)
-
 func InitDB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	mongoURI := os.Getenv("DB_URL")
+	clientOptions := options.Client().ApplyURI(mongoURI)
 
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
@@ -29,5 +27,6 @@ func InitDB() *mongo.Client {
 }
 
 func GetUserCollection(client *mongo.Client) *mongo.Collection {
-	return client.Database("ums").Collection("users")
+	name := os.Getenv("DB_NAME")
+	return client.Database(name).Collection("users")
 }
