@@ -1,77 +1,85 @@
 package models
 
 import (
+	"context"
 	"errors"
+	"ums/internal/config"
 
-	"gopkg.in/mgo.v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type (
 	User struct {
-		ID     bson.ObjectId `bson:"_id" json:"_id"`
-		Name   string        `bson:"name" json:"name"`
-		Gender string        `bson:"gender" json:"gender"`
-		Age    int           `bson:"age" json:"age"`
+		ID     primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+		Name   string             `bson:"name" json:"name"`
+		Gender string             `bson:"gender" json:"gender"`
+		Age    int                `bson:"age" json:"age"`
 	}
 
 	Svc struct {
-		session *mgo.Session
+		client *mongo.Client
 	}
 )
 
 // NewSvc creates a new service with the provided session
-func NewSvc(session *mgo.Session) *Svc {
-	return &Svc{session: session}
+func NewSvc(client *mongo.Client) *Svc {
+	return &Svc{client: client}
 }
 
 func (us *Svc) CreateUser(user *User) error {
-	user.ID = bson.NewObjectId()
+	if user.ID.IsZero() {
+		user.ID = primitive.NewObjectID()
+	}
 
-	session := us.session.Clone()
-	defer session.Close()
-
-	c := session.DB("ums").C("users")
-	return c.Insert(user)
+	collection := config.GetUserCollection(us.client)
+	_, err := collection.InsertOne(context.Background(), user)
+	return err
 }
 
 func (us *Svc) GetUserByID(id string) (*User, error) {
-	if !bson.IsObjectIdHex(id) {
+	collection := config.GetUserCollection(us.client)
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
 		return nil, errors.New("invalid ID format")
 	}
 
-	session := us.session.Clone()
-	defer session.Close()
-
-	c := session.DB("ums").C("users")
+	filter := bson.M{"_id": objectID}
 	user := &User{}
-	if err := c.FindId(bson.ObjectIdHex(id)).One(user); err != nil {
+
+	err = collection.FindOne(context.Background(), filter).Decode(user)
+	if err != nil {
 		return nil, err
 	}
 
 	return user, nil
 }
 
-func (us *Svc) UpdateUser(id string, updatedUser *User) error {
-	if !bson.IsObjectIdHex(id) {
+func (us *Svc) UpdateUser(id string, u *User) error {
+	collection := config.GetUserCollection(us.client)
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
 		return errors.New("invalid ID format")
 	}
 
-	session := us.session.Clone()
-	defer session.Close()
+	filter := bson.M{"_id": objectID}
+	update := bson.M{"$set": u}
+	_, err = collection.UpdateOne(context.Background(), filter, update)
 
-	c := session.DB("ums").C("users")
-	return c.UpdateId(bson.ObjectIdHex(id), updatedUser)
+	return err
 }
 
 func (us *Svc) DeleteUser(id string) error {
-	if !bson.IsObjectIdHex(id) {
+	collection := config.GetUserCollection(us.client)
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
 		return errors.New("invalid ID format")
 	}
 
-	session := us.session.Clone()
-	defer session.Close()
+	filter := bson.M{"_id": objectID}
+	_, err = collection.DeleteOne(context.Background(), filter)
 
-	c := session.DB("ums").C("users")
-	return c.RemoveId(bson.ObjectIdHex(id))
+	return err
 }
