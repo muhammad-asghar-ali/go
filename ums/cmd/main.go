@@ -1,32 +1,27 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"ums/internal/config"
-	"ums/internal/models"
+	"ums/internal/routes"
 
 	"github.com/julienschmidt/httprouter"
-
-	"ums/internal/handlers"
 )
 
 func main() {
-	r := httprouter.New()
+	client := config.InitDB()
+	defer func() {
+		if err := client.Disconnect(context.Background()); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
-	s := config.GetSession()
-	if s == nil {
-		log.Fatal("Could not establish a MongoDB session")
-	}
-	defer s.Close()
+	router := httprouter.New()
 
-	svc := models.NewSvc(s)
-	uh := handlers.NewUserHandler(svc)
+	routes.RegisterRoutes(router, client)
 
-	r.POST("/users", uh.CreateUser)
-	r.GET("/users/:id", uh.GetUserByID)
-	r.PUT("/users/:id", uh.UpdateUser)
-	r.DELETE("/users/:id", uh.DeleteUser)
-
-	log.Fatal(http.ListenAndServe(":9000", r))
+	log.Println("Starting server on :8080")
+	log.Fatal(http.ListenAndServe(":8080", router))
 }

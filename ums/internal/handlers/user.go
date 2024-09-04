@@ -39,6 +39,7 @@ func (uh *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request, ps ht
 	id := ps.ByName("id")
 
 	user, err := uh.svc.GetUserByID(id)
+
 	if err != nil {
 		if err.Error() == "invalid ID format" {
 			http.Error(w, err.Error(), http.StatusBadRequest)
