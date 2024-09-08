@@ -21,11 +21,7 @@ func main() {
 
 	config.InitDB(cfg)
 
-	db, err := config.GetDB()
-	if err != nil {
-		log.Fatal("error getting SQLX database instance:", err)
-		return
-	}
+	db := config.DB()
 
 	dir, err := iofs.New(src, "migrations")
 	if err != nil {
