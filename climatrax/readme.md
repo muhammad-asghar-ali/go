@@ -6,7 +6,7 @@ Before running the Weather Tracker API, ensure you have the following installed 
 
 ### 1. Go
 
-- **Version**: Go 1.16 or later
+- **Version**: Go 1.23 or later
 - **Installation**: [Download Go](https://golang.org/dl/)
 
 ### 2. OpenWeather API Key

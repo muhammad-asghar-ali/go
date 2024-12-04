@@ -7,16 +7,16 @@ import (
 	"strconv"
 )
 
-func ExtractLatLon(r *http.Request) (string, string) {
+func extractLatLong(r *http.Request) (string, string) {
 	queryParams := r.URL.Query()
 	lat := queryParams.Get("lat")
-	long := queryParams.Get("lon")
+	lon := queryParams.Get("lon")
 
-	return lat, long
+	return lat, lon
 }
 
-func ValidateLatLon(lat_str, long_str string) (float64, float64, error) {
-	if lat_str == "" || long_str == "" {
+func validateLatLong(lat_str, lon_str string) (float64, float64, error) {
+	if lat_str == "" || lon_str == "" {
 		return 0, 0, fmt.Errorf("Latitude and longitude are required")
 	}
 
@@ -25,15 +25,15 @@ func ValidateLatLon(lat_str, long_str string) (float64, float64, error) {
 		return 0, 0, fmt.Errorf("Invalid latitude value")
 	}
 
-	long, err := strconv.ParseFloat(long_str, 64)
+	lon, err := strconv.ParseFloat(lon_str, 64)
 	if err != nil {
 		return 0, 0, fmt.Errorf("Invalid longitude value")
 	}
 
-	return lat, long, nil
+	return lat, lon, nil
 }
 
-func SendJSONResponse(w http.ResponseWriter, data any) {
+func sendJSONResponse(w http.ResponseWriter, data any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(data)
 }

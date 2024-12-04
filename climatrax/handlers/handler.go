@@ -11,19 +11,19 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func Weather(w http.ResponseWriter, r *http.Request) {
-	latStr, lonStr := ExtractLatLon(r)
+	lat_str, lon_str := extractLatLong(r)
 
-	lat, long, err := ValidateLatLon(latStr, lonStr)
+	lat, lon, err := validateLatLong(lat_str, lon_str)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	data, err := api.Query(lat, long)
+	data, err := api.Query(lat, lon)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	SendJSONResponse(w, data)
+	sendJSONResponse(w, data)
 }
