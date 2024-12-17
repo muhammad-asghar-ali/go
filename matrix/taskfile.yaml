@@ -1,0 +1,18 @@
+version: "3"
+
+tasks:
+  gen:
+    desc: "Generate Go gRPC code from proto files"
+    cmds:
+      - buf generate proto
+    preconditions:
+      - sh: command -v buf
+    silent: true
+
+  proto-lint:
+    desc: "Lint Protobuf files"
+    cmds:
+      - buf lint proto
+    preconditions:
+      - sh: command -v buf
+    silent: true
