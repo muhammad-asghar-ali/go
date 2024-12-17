@@ -3,7 +3,7 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: matrix/internal/proto
+      value: matrix/internal/pb
 
 plugins:
   # go install github.com/golang/protobuf/protoc-gen-go@latest
