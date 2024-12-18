@@ -1,5 +1,10 @@
 package fns
 
+const (
+	charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	length  = 16
+)
+
 var (
 	CpuBrands = []string{
 		"Intel", "AMD",
@@ -7,6 +12,10 @@ var (
 
 	GpuBrands = []string{
 		"NVIDIA", "AMD",
+	}
+
+	LaptopBrands = []string{
+		"Apple", "Dell", "HP",
 	}
 )
 
@@ -48,5 +57,28 @@ var (
 		"AMD Ryzen 9 3950X", "AMD Ryzen 9 5900X", "AMD Ryzen 9 5950X", "AMD Ryzen 7 5800X", "AMD Ryzen 5 5600X",
 		"AMD Ryzen 3 3200G", "AMD Ryzen 3 2200G", "AMD Ryzen 3 1200", "AMD Ryzen Threadripper 3990X",
 		"AMD Ryzen Threadripper 3960X", "AMD Ryzen Threadripper 2950X", "AMD Athlon 3000G",
+	}
+)
+
+var (
+	AppleLaptops = []string{
+		"Apple MacBook Air",
+		"Apple MacBook Pro",
+		"Dell XPS 13",
+		"Dell XPS 15",
+		"HP Spectre x360",
+		"HP Envy 13",
+	}
+
+	DellLaptops = []string{
+		"Dell XPS 13",
+		"Dell XPS 15",
+		"Dell Inspiron 14",
+	}
+
+	HpLaptops = []string{
+		"HP Spectre x360",
+		"HP Envy 13",
+		"HP Pavilion 15",
 	}
 )
