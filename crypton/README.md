@@ -67,6 +67,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
     var intHash big.Int
     hash := [32]byte{}
     nonce := 0
+
     for nonce < math.MaxInt64 {
         data := pow.InitData(nonce)
         hash = sha256.Sum256(data)
