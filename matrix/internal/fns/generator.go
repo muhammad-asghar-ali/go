@@ -1,9 +1,9 @@
 package fns
 
 import (
-	"matrix/internal/pb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/golang/protobuf/ptypes"
+	"matrix/internal/pb"
 )
 
 func NewKeyboard() *pb.Keyboard {
@@ -89,6 +89,6 @@ func NewLaptop() *pb.Laptop {
 		Weigth: &pb.Laptop_WeigthKg{
 			WeigthKg: rand_float64(1.0, 3.0),
 		},
-		UpdatedAt: ptypes.TimestampNow(),
+		UpdatedAt: timestamppb.Now(),
 	}
 }
