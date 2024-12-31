@@ -7,6 +7,10 @@ import (
 	"matrix/internal/pb"
 )
 
+func init() {
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+}
+
 func rand_layout() pb.Layout {
 	switch rand.Intn(3) {
 	case 1:

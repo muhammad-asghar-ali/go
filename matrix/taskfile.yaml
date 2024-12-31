@@ -16,3 +16,8 @@ tasks:
     preconditions:
       - sh: command -v buf
     silent: true
+
+  test:
+    desc: run the test
+    cmds:
+      - go test -cover -race ./...

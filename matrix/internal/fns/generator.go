@@ -1,6 +1,7 @@
 package fns
 
 import (
+	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"matrix/internal/pb"
@@ -75,7 +76,7 @@ func NewLaptop() *pb.Laptop {
 	b := rand_gpu_brand()
 
 	return &pb.Laptop{
-		Id:           rand_id(),
+		Id:           uuid.NewString(),
 		Brand:        b,
 		Name:         rand_laptop_name(b),
 		Price:        rand_float64(100.0, 2000.0),
