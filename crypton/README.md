@@ -38,65 +38,6 @@ To print all blocks in the blockchain, use the print command:
 
 `go run main.go print`
 
-## Code Overview
-
-### Block Structure
-
-```go
-type (
-    Block struct {
-        Hash     []byte
-        Data     []byte
-        PrevHash []byte
-        Nonce    int
-    }
-)
-```
-
-- **Hash**: The unique identifier of the block.
-- **Data**: The data stored in the block.
-- **PrevHash**: The hash of the previous block.
-- **Nonce**: The nonce value used for proof-of-work.
-
-### Proof-of-Work
-
-Crypton uses a simple proof-of-work mechanism to validate blocks:
-
-```go
-func (pow *ProofOfWork) Run() (int, []byte) {
-    var intHash big.Int
-    hash := [32]byte{}
-    nonce := 0
-
-    for nonce < math.MaxInt64 {
-        data := pow.InitData(nonce)
-        hash = sha256.Sum256(data)
-        intHash.SetBytes(hash[:])
-
-        if intHash.Cmp(pow.Target) == -1 {
-            break
-        } else {
-            nonce++
-        }
-    }
-
-    return nonce, hash[:]
-}
-```
-
-### Persistent Storage
-
-BadgerDB is used to persist the blockchain data. The lh key stores the hash of the last block:
-
-```go
-err = db.Update(func(txn *badger.Txn) error {
-    err = txn.Set(genesis.Hash, genesis.Serialize())
-    HandleError(err)
-    err = txn.Set([]byte("lh"), genesis.Hash)
-    return err
-})
-```
-
 ## Contribution
 
 Contributions are welcome! Feel free to submit issues or pull requests.

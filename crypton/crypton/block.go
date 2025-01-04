@@ -8,22 +8,15 @@ import (
 
 type (
 	Block struct {
-		Hash     []byte
-		Data     []byte
-		PrevHash []byte
-		Nonce    int
+		Hash         []byte
+		Transections []*Transection
+		PrevHash     []byte
+		Nonce        int
 	}
 )
 
-func (b *Block) DeriveHash() {
-	info := bytes.Join([][]byte{b.Data, b.PrevHash}, []byte{})
-	hash := sha256.Sum256(info)
-	b.Hash = hash[:]
-}
-
-func (b *Block) Create(data string, prev []byte) *Block {
-	block := &Block{[]byte{}, []byte(data), prev, 0}
-	// block.DeriveHash()
+func (b *Block) Create(txs []*Transection, prev []byte) *Block {
+	block := &Block{[]byte{}, txs, prev, 0}
 
 	pow := NewProof(block)
 	nonce, hash := pow.Run()
@@ -33,8 +26,8 @@ func (b *Block) Create(data string, prev []byte) *Block {
 	return block
 }
 
-func (b *Block) Genesis() *Block {
-	return b.Create("Genesis", []byte{})
+func (b *Block) Genesis(coinbase *Transection) *Block {
+	return b.Create([]*Transection{coinbase}, []byte{})
 }
 
 func (b *Block) Serialize() []byte {
@@ -55,4 +48,16 @@ func (b *Block) Deserialize(data []byte) *Block {
 	HandleError(err)
 
 	return block
+}
+
+func (b *Block) HashTransections() []byte {
+	txsh := [][]byte{}
+	hash := [32]byte{}
+
+	for _, tx := range b.Transections {
+		txsh = append(txsh, tx.ID)
+	}
+
+	hash = sha256.Sum256(bytes.Join(txsh, []byte{}))
+	return hash[:]
 }
