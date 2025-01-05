@@ -19,6 +19,10 @@ func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&User{})
 }
 
+func (u *User) Create() error {
+	return database.GetDB().Create(u).Error
+}
+
 func (u *User) FindByUsername(username string) error {
 	database.GetDB().Where("username = ?", username).First(&u)
 
@@ -27,4 +31,8 @@ func (u *User) FindByUsername(username string) error {
 	}
 
 	return nil
+}
+
+func (u *User) GetUser(user_id uint) {
+	database.GetDB().First(u, user_id)
 }

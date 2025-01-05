@@ -6,6 +6,7 @@ import (
 	"authis/internal/config"
 	"authis/internal/database"
 	"authis/internal/handlers"
+	"authis/internal/middlewares"
 	"authis/internal/models"
 )
 
@@ -19,6 +20,11 @@ func main() {
 
 	app.Post("/register", handlers.Register)
 	app.Post("/login", handlers.Login)
+
+	app.Use(middlewares.Auth)
+	app.Get("/user", handlers.User)
+	app.Post("/logout", handlers.Logout)
+	app.Post("/refresh", handlers.Refresh)
 
 	app.Listen(":6000")
 }

@@ -5,10 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-redis/redis"
 	"github.com/gofiber/fiber/v2"
 
-	"authis/internal/config"
 	"authis/internal/database"
 	"authis/internal/models"
 	"authis/internal/shared"
@@ -30,7 +28,9 @@ func Register(c *fiber.Ctx) error {
 		Password: shared.HashPassword(data["password"]),
 	}
 
-	database.GetDB().Create(&user)
+	if err := user.Create(); err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
 
 	return c.JSON(user)
 }
@@ -67,11 +67,7 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     config.GetConfig().GetRedisAddr(),
-		Password: config.GetConfig().GetRedisPassword(),
-		DB:       config.GetConfig().GetRedisDB(),
-	})
+	rdb := database.GetRedisClient()
 
 	rdb.Set(strconv.Itoa(int(user.ID)), *access, time.Hour*24)
 	rdb.Set("refresh_"+strconv.Itoa(int(user.ID)), *refresh, time.Hour*24*7)
@@ -85,4 +81,41 @@ func Login(c *fiber.Ctx) error {
 func User(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.User)
 	return c.JSON(user)
+}
+
+func Logout(c *fiber.Ctx) error {
+	user := c.Locals("user").(models.User)
+
+	rdb := database.GetRedisClient()
+
+	rdb.Del(strconv.Itoa(int(user.ID)))
+	rdb.Del("refresh_" + strconv.Itoa(int(user.ID)))
+
+	return c.JSON(fiber.Map{
+		"message": "Successful",
+	})
+}
+
+func Refresh(c *fiber.Ctx) error {
+	user := c.Locals("user").(models.User)
+
+	access, err := shared.AccessToken(user.ID)
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	refresh, err := shared.RefreshToken(user.ID)
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	rdb := database.GetRedisClient()
+
+	rdb.Set(strconv.Itoa(int(user.ID)), *access, time.Hour*24)
+	rdb.Set("refresh_"+strconv.Itoa(int(user.ID)), *refresh, time.Hour*24*7)
+
+	return c.JSON(fiber.Map{
+		"access_token":  access,
+		"refresh_token": refresh,
+	})
 }

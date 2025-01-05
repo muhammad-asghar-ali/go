@@ -2,9 +2,7 @@
 
 This project demonstrates how to build a **JWT-based authentication system** using Golang. The application utilizes various modern technologies and tools to create a secure and efficient authentication mechanism.
 
-## Technologies Used
-
-### Core Technologies:
+### Tech Stack:
 
 - **[Fiber](https://gofiber.io/):** A fast, lightweight, and efficient web framework for Golang.
 - **[GORM](https://gorm.io/):** An ORM library for interacting with a PostgreSQL database.
