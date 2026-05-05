@@ -11,7 +11,7 @@ import (
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	fmt.Println("Domian, HasMX, HasSPF, SpfRecord, HasDMARC, DmarcRecord")
+	fmt.Println("Domain, HasMX, HasSPF, SpfRecord, HasDMARC, DmarcRecord")
 
 	for scanner.Scan() {
 		domain := strings.TrimSpace(scanner.Text())

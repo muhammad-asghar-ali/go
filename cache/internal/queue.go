@@ -30,7 +30,7 @@ func (q *Queue) Display() {
 
 	for i := 0; i < q.Length; i++ {
 		fmt.Printf("{%s}", n.Val)
-		if i < q.Length {
+		if i < q.Length-1 {
 			fmt.Printf("***")
 		}
 

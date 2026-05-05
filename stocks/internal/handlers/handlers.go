@@ -47,6 +47,7 @@ func GetStockByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateStock(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	var stock models.Stock
 	if err := json.NewDecoder(r.Body).Decode(&stock); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -67,6 +68,7 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateStockByID(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	idStr := mux.Vars(r)["id"]
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {

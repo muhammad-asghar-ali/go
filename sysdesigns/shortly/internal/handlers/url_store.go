@@ -27,6 +27,7 @@ func NewUrlStoreHandler() *UrlStoreHanlder {
 }
 
 func (ush *UrlStoreHanlder) Shorten(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	defer r.Body.Close()
 	req := &ShortenRequest{}
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

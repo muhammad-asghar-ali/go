@@ -7,7 +7,7 @@ import "keyboard.proto";
 import "memory.proto";
 import "processor.proto";
 import "screen.proto";
-import "stroage.proto";
+import "storage.proto";
 
 message Laptop {
   string id = 1;
@@ -20,7 +20,7 @@ message Laptop {
   Screen screen = 8;
   Keyboard keyboard = 9;
   repeated GPU gpuses = 10;
-  repeated Stroage stroages = 11;
+  repeated Storage storages = 11;
 
   oneof weigth {
     double weigth_kg = 12;

@@ -18,16 +18,7 @@ func ByteToPerformers(row []byte) ([]types.Performer, error) {
 		return nil, err
 	}
 
-	// FIXME - not a good approach.
-	allNull := true
-	for _, p := range performers {
-		if p.ID != uuid.Nil || p.Bio != "" || p.Genre != "" || p.Name != "" {
-			allNull = false
-			break
-		}
-	}
-
-	if allNull {
+	if hasNoPerformerData(performers) {
 		return nil, nil
 	}
 
@@ -42,20 +33,33 @@ func ByteToTickets(row []byte) ([]types.Ticket, error) {
 		return nil, err
 	}
 
-	// FIXME - not a good approach.
-	allNull := true
-	for _, ticket := range tickets {
-		if ticket.ID != uuid.Nil || ticket.TicketType != "" || ticket.Price != 0 || ticket.TotalTickets != 0 || ticket.AvailableTickets != 0 {
-			allNull = false
-			break
-		}
-	}
-
-	if allNull {
+	if hasNoTicketData(tickets) {
 		return nil, nil
 	}
 
 	return tickets, nil
+}
+
+// hasNoPerformerData checks if the performers slice is empty or contains
+// only zero-value elements (can happen when PostgreSQL returns empty JSON arrays)
+func hasNoPerformerData(performers []types.Performer) bool {
+	for _, p := range performers {
+		if p.ID != uuid.Nil || p.Bio != "" || p.Genre != "" || p.Name != "" {
+			return false
+		}
+	}
+	return true
+}
+
+// hasNoTicketData checks if the tickets slice is empty or contains
+// only zero-value elements (can happen when PostgreSQL returns empty JSON arrays)
+func hasNoTicketData(tickets []types.Ticket) bool {
+	for _, ticket := range tickets {
+		if ticket.ID != uuid.Nil || ticket.TicketType != "" || ticket.Price != 0 || ticket.TotalTickets != 0 || ticket.AvailableTickets != 0 {
+			return false
+		}
+	}
+	return true
 }
 
 func ConvertEventSearchParams(req types.SearchEvent) entities.SearchEventsParams {

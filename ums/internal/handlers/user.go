@@ -20,6 +20,7 @@ func NewUserHandler(us *models.Svc) *UserHandler {
 }
 
 func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	defer r.Body.Close()
 	user := &models.User{}
 	if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -55,6 +56,7 @@ func (uh *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request, ps ht
 }
 
 func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	defer r.Body.Close()
 	id := ps.ByName("id")
 
 	user := models.User{}

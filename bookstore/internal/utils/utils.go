@@ -8,6 +8,7 @@ import (
 )
 
 func ParseBody(r *http.Request, x any) {
+	defer r.Body.Close()
 	if body, err := io.ReadAll(r.Body); err == nil {
 		if err := json.Unmarshal(body, x); err != nil {
 			return

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -57,10 +56,16 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 	bookID := vars["id"]
 	ID, err := strconv.ParseInt(bookID, 0, 0)
 	if err != nil {
-		fmt.Println("parse int err", err.Error())
+		http.Error(w, "invalid book ID", http.StatusBadRequest)
+		return
 	}
 
-	book, _ := NewBook.GetBookByID(ID)
+	book, result := NewBook.GetBookByID(ID)
+	if result.Error != nil {
+		http.Error(w, "failed to retrieve book", http.StatusInternalServerError)
+		return
+	}
+
 	res, err := json.Marshal(book)
 	if err != nil {
 		http.Error(w, "failed to marshal response", http.StatusInternalServerError)
@@ -81,10 +86,15 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	bookID := vars["id"]
 	ID, err := strconv.ParseInt(bookID, 0, 0)
 	if err != nil {
-		fmt.Println("parse int err", err.Error())
+		http.Error(w, "invalid book ID", http.StatusBadRequest)
+		return
 	}
 
-	book, _ := update.GetBookByID(ID)
+	book, result := update.GetBookByID(ID)
+	if result.Error != nil {
+		http.Error(w, "failed to retrieve book", http.StatusInternalServerError)
+		return
+	}
 	if book != nil {
 		book.Author = update.Author
 		book.Name = update.Name
@@ -102,7 +112,8 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	bookID := vars["id"]
 	ID, err := strconv.ParseInt(bookID, 0, 0)
 	if err != nil {
-		fmt.Println("parse int err", err.Error())
+		http.Error(w, "invalid book ID", http.StatusBadRequest)
+		return
 	}
 
 	book := NewBook.DeleteBook(ID)

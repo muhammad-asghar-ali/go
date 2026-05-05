@@ -38,12 +38,6 @@ const (
 	LaptopServiceCreateLaptopProcedure = "/pb.LaptopService/CreateLaptop"
 )
 
-// These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
-var (
-	laptopServiceServiceDescriptor            = pb.File_laptop_service_proto.Services().ByName("LaptopService")
-	laptopServiceCreateLaptopMethodDescriptor = laptopServiceServiceDescriptor.Methods().ByName("CreateLaptop")
-)
-
 // LaptopServiceClient is a client for the pb.LaptopService service.
 type LaptopServiceClient interface {
 	CreateLaptop(context.Context, *connect.Request[pb.CreateLaptopRequest]) (*connect.Response[pb.CreateLaptopResponse], error)
@@ -58,11 +52,12 @@ type LaptopServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewLaptopServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) LaptopServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
+	laptopServiceMethods := pb.File_laptop_service_proto.Services().ByName("LaptopService").Methods()
 	return &laptopServiceClient{
 		createLaptop: connect.NewClient[pb.CreateLaptopRequest, pb.CreateLaptopResponse](
 			httpClient,
 			baseURL+LaptopServiceCreateLaptopProcedure,
-			connect.WithSchema(laptopServiceCreateLaptopMethodDescriptor),
+			connect.WithSchema(laptopServiceMethods.ByName("CreateLaptop")),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -89,10 +84,11 @@ type LaptopServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewLaptopServiceHandler(svc LaptopServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	laptopServiceMethods := pb.File_laptop_service_proto.Services().ByName("LaptopService").Methods()
 	laptopServiceCreateLaptopHandler := connect.NewUnaryHandler(
 		LaptopServiceCreateLaptopProcedure,
 		svc.CreateLaptop,
-		connect.WithSchema(laptopServiceCreateLaptopMethodDescriptor),
+		connect.WithSchema(laptopServiceMethods.ByName("CreateLaptop")),
 		connect.WithHandlerOptions(opts...),
 	)
 	return "/pb.LaptopService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

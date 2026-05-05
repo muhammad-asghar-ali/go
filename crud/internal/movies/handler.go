@@ -34,7 +34,10 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	movie := &Movie{}
 
-	_ = json.NewDecoder(r.Body).Decode(movie)
+	if err := json.NewDecoder(r.Body).Decode(movie); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
 
 	movie.ID = strconv.Itoa(rand.Intn(1000000000))
 	movies = append(movies, movie)
@@ -42,7 +45,7 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(movie)
 }
 
-func UpdateMoive(w http.ResponseWriter, r *http.Request) {
+func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	dummy()
 
 	w.Header().Set("Content-Type", "application/json")
@@ -53,7 +56,10 @@ func UpdateMoive(w http.ResponseWriter, r *http.Request) {
 			movies = append(movies[:i], movies[i+1:]...)
 
 			movie := &Movie{}
-			_ = json.NewDecoder(r.Body).Decode(movie)
+			if err := json.NewDecoder(r.Body).Decode(movie); err != nil {
+				http.Error(w, "invalid request body", http.StatusBadRequest)
+				return
+			}
 			movie.ID = strconv.Itoa(rand.Intn(1000000000))
 			movies = append(movies, movie)
 

@@ -49,15 +49,15 @@ func NewRAM() *pb.Memory {
 	}
 }
 
-func NewSSD() *pb.Stroage {
-	return &pb.Stroage{
+func NewSSD() *pb.Storage {
+	return &pb.Storage{
 		Driver: pb.Driver_DRIVER_SSD,
 		Memory: set_memory(pb.Unit_UNIT_GIGABYTE),
 	}
 }
 
-func NewHDD() *pb.Stroage {
-	return &pb.Stroage{
+func NewHDD() *pb.Storage {
+	return &pb.Storage{
 		Driver: pb.Driver_DRIVER_SSD,
 		Memory: set_memory(pb.Unit_UNIT_TERABYTE),
 	}
@@ -86,7 +86,7 @@ func NewLaptop() *pb.Laptop {
 		Screen:       NewScreen(),
 		Keyboard:     NewKeyboard(),
 		Gpuses:       []*pb.GPU{NewGPU()},
-		Stroages:     []*pb.Stroage{NewHDD(), NewSSD()},
+		Storages:     []*pb.Storage{NewHDD(), NewSSD()},
 		Weigth: &pb.Laptop_WeigthKg{
 			WeigthKg: rand_float64(1.0, 3.0),
 		},

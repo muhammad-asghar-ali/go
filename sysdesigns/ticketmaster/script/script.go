@@ -1,7 +1,8 @@
 // Support only uuid.UUID
-// FIXME -
-//  1. Now on only on flag updating all the filed with same name
-//  2. Not formatting the code after update
+//
+// Known limitations:
+//  1. When updating fields, all fields with the same name across entities are updated
+//  2. The generated code is not formatted after updates (run gofmt manually)
 
 package main
 

@@ -12,7 +12,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method != "GET" {
-		http.Error(w, "method is not supported", http.StatusNotFound)
+		http.Error(w, "method is not supported", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -25,7 +25,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "POST requst successfully!\n")
+	fmt.Fprintf(w, "POST request successfully!\n")
 	name := r.FormValue("name")
 	address := r.FormValue("address")
 

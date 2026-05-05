@@ -10,7 +10,7 @@ enum Driver {
   DRIVER_SSD = 2;
 }
 
-message Stroage {
+message Storage {
   Driver driver = 1;
   Memory memory = 2;
 }
