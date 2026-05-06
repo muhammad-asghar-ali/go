@@ -77,4 +77,4 @@ curl http://localhost:8081/notifications/1
 1. Add detailed logging for monitoring.
 2. Implement message retries for failed deliveries.
 3. Extend support for multiple notification types.
-4. Use environment varibales
+4. Use environment variables for configuration.

@@ -6,29 +6,29 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
 
     1. **Functional Requirements:**
 
-       - User should be aboe to view events.
-       - User should be able to dearch for events.
-       - User should be able to book tickets for events.
-       - User should be able to view their booked events.
-       - Admin or event coordinators should be able to add events.
+       - Users should be able to view events.
+       - Users should be able to search for events.
+       - Users should be able to book tickets for events.
+       - Users should be able to view their booked events.
+       - Admins or event coordinators should be able to add events.
        - Popular events should have dynamic pricing.
-       - Admin or event coordinators should be able to remove the events.
-       - Should should be able to see the avaiable seats for the event.
-       - Process payments for book event (optional).
+       - Admins or event coordinators should be able to remove events.
+       - Users should be able to see the available seats for the event.
+       - Process payments for booked events (optional).
        - Generate and validate seats/tickets (optional).
-       - Revers the book event (cancel the booked event) after certain time.
+       - Reverse the booking (cancel the booked event) after a certain time.
 
     2. **Non Functional Requirements:**
 
        - The system should prioritize availability for searching.
-       - The system should not book a ticket more the one time for specific user (if the booking event is active).
-       - The system should be scalable and able to handle high throughput in the form of popular events (10 million user, one event).
-       - The system should have low latency search (< 500ms)
-       - The system is read heavy, and thus needs to be able to support high read throughput (100:1).
+       - The system should not book a ticket more than once for a specific user (if the booking event is active).
+       - The system should be scalable and able to handle high throughput for popular events (10 million users, one event).
+       - The system should have low latency search (< 500ms).
+       - The system is read-heavy, and thus needs to be able to support high read throughput (100:1).
        - The system should protect user data and adhere to GDPR (General Data Protection Regulation).
-       - The system should be fault tolerant.
+       - The system should be fault-tolerant.
        - The system should provide secure transactions for purchases.
-       - The system should be tested and east to deploy.
+       - The system should be tested and easy to deploy.
        - The system should have regular backups.
 
 2.  **Assumptions:** Here are some for a Ticketmaster-like application based on your assumptions
@@ -88,7 +88,7 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
 
     On a high level, we would need following components in our design:
 
-    1. **User Interface (UI):** Customer interact with the website or app to browse events, book tickets, and pay.
+    1. **User Interface (UI):** Customers interact with the website or app to browse events, book tickets, and pay.
 
     2. **Load Balancer:** Distributes incoming requests across multiple application servers.
 
@@ -110,14 +110,14 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
 5.  **Database Design:**
 
     1. **SQL vs NoSQL:**
-       To choose right database we need to understand our need. Let consider some factors:
-       - We need to store billion records.
-       - Read queries are much higher then the write.
+       To choose the right database we need to understand our needs. Let's consider some factors:
+       - We need to store billions of records.
+       - Read queries are much higher than writes.
        - We do need joins.
 
-    Given these points, a SQL database like Postgres, MySQL are better option.
+    Given these points, a SQL database like Postgres or MySQL is a better option.
 
-    2.  **Schema Design:** To satisfy our key functional requirements, we'll need the following entities
+    2.  **Schema Design:** To satisfy our key functional requirements, we'll need the following entities:
 
         1. Events
         2. Users
@@ -132,7 +132,7 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
 6.  **System API Design:**
     A ticketing system like Ticketmaster requires APIs for users to browse events, book tickets, make payments, and manage bookings. Below is a RESTful API design covering the core functionalities.
 
-    1. **User API:** Basic auth APIs for user to access the system.
+    1. **User API:** Basic auth APIs for users to access the system.
 
        - **Register User**
 
@@ -179,7 +179,7 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
 
          ```json
          {
-           "message": "User login successfully",
+           "message": "User logged in successfully",
            "data": {
              "access_token": ".......",
              "refresh_token": "......."
@@ -187,7 +187,7 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
          }
          ```
 
-    2. **Event API:** There are basic create, read, read_all, updated and delete APIs, here are sample API structure.
+    2. **Event API:** Basic create, read, read_all, update and delete APIs. Here is a sample API structure.
 
        - **Get All Events**
 
@@ -225,7 +225,7 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
          }
          ```
 
-    3. **Ticket Booking API:** There are basic create, read, read_all, updated and delete APIs, here are sample API structure.
+    3. **Ticket Booking API:** Basic create, read, read_all, update and delete APIs. Here is a sample API structure.
 
        - **Book Tickets**
 

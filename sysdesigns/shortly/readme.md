@@ -8,17 +8,17 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
        - Generate the short url for given long url.
        - Every url must be unique.
-       - Redriect user to orignal long url when click on short url.
-       - User can customize the url (optional).
-       - Set the short user expriation time.
+       - Redirect user to original long URL when clicking on short URL.
+       - User can customize the URL (optional).
+       - Set the short URL expiration time.
        - Provide analytics to link usage.
        - May save the user information (optional).
 
     2. **Non Functional Requirements:**
 
-       - High availability (the service should up like 99.9% time).
-       - Low latency (redirect to url should heppen in ms).
-       - Scalability (the system handle 1M records per day).
+       - High availability (the service should be up 99.9% of the time).
+       - Low latency (redirect to URL should happen in ms).
+       - Scalability (the system should handle 1M records per day).
        - Security to prevent malicious use, such as phishing.
 
 2.  **Assumptions:**
@@ -26,7 +26,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
     - **Daily requests per day to short urls** ~ 1000000.
     - **Read and Write ratio:** 100:1 (for every URL creation, we expect 100 redirects).
     - **Peak Traffic:** 10x of the average load.
-    - **Orignal Url length:** 100 characters.
+    - **Original URL length:** 100 characters.
 
 3.  **Capacity Estimation:**
 
@@ -35,11 +35,11 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
        - **Average write per second (WPS):** (1,000,000 requests / 24 \* 60 \* 60 seconds) ~ 12
        - **Peak WPS:** 12 \* 10 = 120
        - **Average read per second (RPS):** 12 \* 100 = 1200
-       - **Peal RPS:** 10 \* 1200 = 12000
+       - **Peak RPS:** 10 \* 1200 = 12000
 
     2. **Storage Estimation:**
 
-       - We need the following informations for each URL.
+       - We need the following information for each URL.
          - **Short URL:** 7 characters
          - **Long URL:** 100 characters
          - **CreationDate:** 8 bytes (timestamp)
@@ -60,7 +60,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
     4. **Caching Estimation:**
 
-       - The system is ead heavy so using cache can reduce the latency for read requests.
+       - The system is read-heavy so using cache can reduce the latency for read requests.
        - Can cache hot URLs, can identify the URLs where 20% of the URLs generate 80% of the read traffic.
        - 1 million writes per day, and cache only 20%, so the formula will be:
          - 1M \* 0.2 \* 135 Bytes ~ 26M
@@ -80,7 +80,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
     - **Database:** Stores mappings between short URLs and long URLs.
     - **Cache:** Stores frequently accessed URL mappings for faster retrieval.
 
-    **NOTE:** we can split the services to write and read sperate services.
+    **NOTE:** we can split the services to write and read separate services.
 
     ![Design](shortly.png)
 
@@ -89,14 +89,14 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
     1. **SQL vs NoSQL:**
        To choose right database we need to understand our need. Let consider some factors:
        - We need to store billion records.
-       - Read queries are much higher then the write.
+       - Read queries are much higher than the write.
        - We don't need joins.
        - Highly scalable and available.
 
     Given these points, a NoSQL database like MongoDB, Cassandra are better option due to their ability to efficiently handle billions.
 
     2. **Schema Design:**
-       In inital stage we need only two tables which are store data. One is to store the user related database and the other table store the information about url.
+       In the initial stage we need only two tables which store data. One is to store the user related information and the other table stores the information about URLs.
 
        1. users
        2. url_store
@@ -216,13 +216,13 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
     2. **Link Expiration:** Link expiration allows URLs to be valid only for a specified period.
 
-       1. **Expiration Date Handling:** We can handle exporation via a user specified date or make the constand valus in the server the make the urls mark as expired.
+       1. **Expiration Date Handling:** We can handle expiration via a user-specified date or make constant values on the server that mark the URLs as expired.
 
           - **User Specified Expiration:** user specify an expiration date when creating the short URL. The date must be validate that it's in the future and within allowable limits.
 
           - **Default Expiration:** If no expiration date is provided, the service can assign a default expiration period.
 
-       2. **Expiration Logic:** There are serial ways to make the expiration loguc here are can discuss the expiration via background jobs (CRON JOB) and other one is real-time expiration.
+       2. **Expiration Logic:** There are several ways to handle expiration logic. Here we can discuss expiration via background jobs (CRON JOB) and real-time expiration.
 
     3. **URL Redirection:** This involves two key steps
 

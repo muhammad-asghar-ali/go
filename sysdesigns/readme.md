@@ -1,5 +1,14 @@
 # System Design
 
+Study notes and implementations for common system design concepts and patterns.
+
+## Implementations
+
+- **[shortly](./shortly)**: URL shortener service design with MongoDB and Redis
+- **[ticketmaster](./ticketmaster)**: Event ticketing platform design with PostgreSQL, Redis, and sqlc
+
+---
+
 ## 1. IP
 
 ### 1.1 Versions
@@ -92,7 +101,7 @@
 - **5.4.3 Least Connections**
 - **5.4.4 Least Response Time**
 - **5.4.5 Least Bandwidth**
-- **5.4.6 Hasing**
+- **5.4.6 Hashing**
 
 ### 5.5 Redundant load balancers
 

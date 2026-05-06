@@ -23,7 +23,7 @@ To run the program:
 # Domain Mail Configuration Checker - Sample Output
 
 The following is an example output of the Domain Mail Configuration Checker program. The results are displayed in CSV format:
-`exmaple.com, true, true, "v=spf1 include:\_spf.mx.cloudflare.net ~all", true, "v=DMARC1; p=reject; pct=100; rua=mailto:f196fc49e9b6435498f27c54ac0e578f@dmarc-reports.cloudflare.net,mailto:cloudflare@dmarc.area1reports.com; ruf=mailto:cloudflare@dmarc.area1reports.com"`
+`example.com, true, true, "v=spf1 include:\_spf.mx.cloudflare.net ~all", true, "v=DMARC1; p=reject; pct=100; rua=mailto:f196fc49e9b6435498f27c54ac0e578f@dmarc-reports.cloudflare.net,mailto:cloudflare@dmarc.area1reports.com; ruf=mailto:cloudflare@dmarc.area1reports.com"`
 
 ### Explanation of Columns:
 

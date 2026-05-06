@@ -33,7 +33,7 @@ Your bot needs tokens to authenticate and send messages to Slack.
    - `chat:write`: To send messages on behalf of the bot.
    - `commands`: To create custom commands for the bot.
    - `users:read`: If your bot needs to read user information.
-   - mat requried more permissions as well
+    - mat required more permissions as well
 3. Once you have added the necessary scopes, click on **Install App** to generate the tokens.
 4. Copy the **Bot User OAuth Token** and the **App Token** for later use in your app.
 
